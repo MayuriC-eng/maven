@@ -2,44 +2,26 @@ pipeline {
     agent any
 
     tools {
-        // Make sure these names EXACTLY match Jenkins → Manage Jenkins → Tools
-        maven "Maven3"
-        jdk "JDK-17"
+        maven 'Maven3'   // Name must match Maven configured in Jenkins Global Tool Configuration
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Initialize') {
-            steps {
-                bat "echo PATH=%PATH%"
-                bat "java -version"
-                bat "mvn -version"
-            }
-        }
-
         stage('Build') {
             steps {
-                bat "mvn -B clean package"
+                bat 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                bat "mvn test"
+                bat 'mvn test'
             }
-        }
-    }
-
-    post {
-        always {
-            junit allowEmptyResults: true,
-                  testResults: '**/target/surefire-reports/*.xml'
         }
     }
 }
